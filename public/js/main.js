@@ -154,8 +154,10 @@ var e = new eventMap();
 var j = 0;
 var pace = 10; //km/hr
 
+athID = 386;
+
 d = new dataLoader();
-d.getData(386);
+d.getData(athID);
 
 
 e.onDistanceChanged(function updateDistance(metrics) {
@@ -181,4 +183,9 @@ e.onReady(function(){update();});
 
 
 
-setInterval(function(){d.getData()},100000);
+setInterval(function(){d.getData(athID)},100000);
+
+$(window).on('hashchange', function() {
+  athID = window.location.hash.substr(1);
+  d.getData(athID);
+});
