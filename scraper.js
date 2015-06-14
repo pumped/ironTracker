@@ -133,9 +133,14 @@ scraper.prototype.processAthlete = function($, athlete) {
 s = new scraper();
 
 function autoScrape() {
-	s.scrape(386);
-	s.scrape(2);
-	s.scrape(12);
+	try {
+		s.scrape(386);
+		s.scrape(2);
+		s.scrape(12);
+	}
+	catch (e) {
+		
+	}
 }
 
 setTimeout(autoScrape(), 10*1000*60);
