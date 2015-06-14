@@ -1,0 +1,40 @@
+html, body{
+    height: 100%;
+}
+
+#map {
+	height:50%;
+	min-height:200px;
+}
+
+.divider {
+	height:20px;
+	background-color:#5F86FF;
+}
+
+.large-stat {
+	font-size:22px;
+}
+
+.large-stat-title {
+	font-size:15px;
+}
+
+.stat { 
+	text-align:center;
+	padding-bottom:15px;
+}
+
+.leaflet-control-attribution {
+	display: none;
+}
+
+@media (min-width: 992px) { 
+	.large-stat {
+		font-size:40px;
+	}
+
+	.large-stat-title {
+		font-size:25px;
+	}
+}

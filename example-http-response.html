@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="ROBOTS" content="NOYDIR" />
+    <meta name="ROBOTS" content="NOODP" />
+    <meta name="p:domain_verify" content="b20f42b0bafc1bfc2f559241022a8c9d" >
+    <meta name="google-site-verification" content="C0SboseTtSt6vFpE98Yq1Ur2IVGgnaB9bRkIqHGDNFw" />
+    <meta property="twitter:account_id" content="1510104590" />
+    <meta property="fb:admins" content="49102455,584780102,748220376,1134223497,100000369144587,100000475753312"/>
+    
+    <!-- 10.176.162.253 -->
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content=""/>
+    <meta property="og:url" content=""/>
+    <meta property="og:image" content=""/>
+    <meta property="og:site_name" content="IRONMAN.com"/>
+    <meta property="og:description" content=""/>
+    
+    <title> </title>
+
+    
+    <link rel="icon" type="image/png" href="http://www.ironman.com/media/favicon.png" />
+    <link rel="shortcut icon" href="http://www.ironman.com/media/favicon.ico" /> 
+    
+    
+    <link rel="stylesheet" type="text/css" href="http://www.ironman.com/includes/cssbin/mini/ironman.381024846127.css" media="all" />
+
+  	
+    
+    <!--[if lt IE 9]>
+  	<link rel="stylesheet" type="text/css" href="http://www.ironman.com/includes/cssbin/ie8.css" media="all" />
+	  <![endif]-->
+
+  	<!--[if lt IE 8]>
+	  <link rel="stylesheet" type="text/css" href="http://www.ironman.com/includes/cssbin/ie7.css" media="all" />
+	  <![endif]-->
+    
+    <script type="text/javascript" src="http://www.ironman.com/includes/jsbin/mini/ironman.1397064074217.js"></script>
+
+    <script type="text/javascript">
+        var ga_accountID, ga_domain;
+        var host = location.host;
+
+        ga_accountID = 'UA-213900-2';
+        ga_domain = 'ironman.com';
+
+        // for testing only, remove from production
+        //if (typeof console.log != "undefined") {
+        //console.log("account id= " + ga_accountID);
+        //}
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', ga_accountID]);
+        _gaq.push(['_setDomainName', ga_domain]);
+
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+    <!-- Start of Neustar Real User Measurements code -->
+    <script type="text/javascript">
+        ns_rum = {};
+        var t_pagestart = new Date().getTime(), t_pageend;
+        ns_rum.init = function () {
+            t_pageend = new Date().getTime();
+            var s = document.createElement ('script'); s.id = 'rum';
+            s.type = 'text/javascript'; s.src = 'https://d2lo2tipcl3aii.cloudfront.net/C620CFB87B594673BEA261FF02820DF9/neustar.beacon.js';
+            document.getElementsByTagName('head')[0].appendChild(s);
+        }
+        window.addEventListener ? window.addEventListener('load', ns_rum.init, false) : window.attachEvent ? window.attachEvent('onload', ns_rum.init) : false;
+
+        ns_rum.errors = [];
+        ns_rum.ogErrorHandler = window.onerror;
+        window.onerror = function rumErrorHandler(msg, url, line){
+            ns_rum.errors.push({'url': url, 'line': line, 'msg': msg});
+            if(ns_rum.ogErrorHandler){ return ns_rum.ogErrorHandler(msg, url, line); }
+            return false;
+        }
+    </script>
+    <!-- End of Neustar Real User Measurements code -->
+		<script type="text/javascript" language="Javascript">
+		function setHeight() {
+			window.parent.postMessage($('body').outerHeight( true ), "*");
+
+		};
+		</script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="//cdn.jsdelivr.net/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script type="text/javascript">
+		var cookieList = function(cookieName) {
+
+		    $.cookie.defaults = { path: '/', domain: '.ironman.com', expires: null};
+		    var cookie = $.cookie(cookieName);
+		    var items = cookie ? cookie.split(/,/) : new Array();
+
+		    return {
+		    "add": function(val) {
+		        items.push(val);
+		        $.cookie(cookieName, items.join(','));
+		    },
+		    "remove": function (val) {
+		        indx = items.indexOf(val);
+		        if(indx!=-1) items.splice(indx, 1);
+		        $.cookie(cookieName, null);
+		        $.cookie(cookieName, items.join(','));
+		    },
+		    "clear": function() {
+		        items = null;
+		        $.cookie(cookieName, null);
+		    },
+		    "items": function() {
+		        return items;
+		    }
+		  }
+		}
+		$(function () {
+		    var favCookie = new cookieList("favorites");
+		    var favs = favCookie.items();
+		    var checkbox = $('#favOptions').find(':checkbox');
+		    checkbox.each(function () {
+		        for(var i = 0; i < favs.length; i++) {
+		                if (this.name == favs[i])
+		                {
+		                        $(this).prop('checked', 1);
+		                        i = favs.length;
+		                };
+		        }
+		    });
+		    //checkbox.button();
+		    checkbox.change(function () {
+		        if (this.checked) {
+		            favCookie.add(this.name);
+		        } else {
+		            favCookie.remove(this.name);
+		        }
+		    });
+		});
+		document.domain='ironman.com';
+		</script>
+    
+</head>
+
+<body style="width:740px !important; background:#fff; min-width:740px !important;overflow:hidden;" scroll="no">
+
+<div style="width:735px !important;">
+<!-- Begin: Wrapper -->
+    
+
+
+        <!-- Begin: main content area -->
+        
+	<!-- Start: main content area -->
+	<div id="mainContentColWrap" class="clear" style="border-top: none !important; width:735px !important;">
+		<div id="mainInnerColWrap">
+			<div id="mainContentCol1" class="">
+				
+			</div>
+			<div id="mainContentCol2" class="">
+				
+			</div>
+			<div id="mainContentCol3" class="rail3">
+				
+			</div>
+			<div id="mainContentCol4" class="rail4">
+				
+
+<div class="moduleWrap eventResults resultsListing resultsListingDetails">
+    <div class="moduleContentOuter">
+        <div class="moduleContentInner clear">
+        	<section>
+        		<header>
+					<h1><span id="favOptions"><input type="checkbox" id="fav-1143240085-24" name="1143240085-24"/></span>Markus Fachbach</h1>
+					<div class="right" id="ranks">
+						<div id="div-rank"><strong>Overall Rank:</strong> --</div>
+						<div id="rank"><strong>Div Rank:</strong> --</div>
+                        <!--div id="gen-rank"><strong>Gender Rank:</strong> </div-->
+					</div>
+				</header>
+				<div class="results-table-white">
+					<div class="athlete-avatar">
+					</div>
+
+					<table width="350" border="0" class="left" id="general-info">
+						<thead>
+							<tr>
+								<td colspan="2">General Info</td>
+							</tr>
+						</thead>
+					    <tbody>
+					        <tr>
+                                <td><strong>BIB</strong></td>
+                                <td>24</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Division</strong></td>
+                                <td>MPRO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>State</strong></td>
+                                <td>Kadenbach </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Country</strong></td>
+                                <td>DEU</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Profession</strong></td>
+                                <td>Professional Triathlete</td>
+                            </tr>
+
+					    </tbody>
+                    </table>
+
+					<table width="175" border="0" class="right" id="athelete-details">
+						<thead>
+							<tr>
+								<td colspan="2">Race Summary</td>
+							</tr>
+						</thead>
+					    <tbody>
+<tr>
+	<td><strong>Swim:</strong></td>
+	<td>51:08</td>
+</tr>
+                            <tr>
+                                <td><strong>Bike</strong></td>
+                                <td>--:--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Run</strong></td>
+                                <td>--:--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Overall</strong></td>
+                                <td>--:--</td>
+                            </tr>
+					    </tbody>
+                    </table>
+				</div>
+
+				<div class="athlete-table-details">
+					
+<span style="margin-bottom:5px;width:98%;background:#000000;color:#ffffff;font-weight:bold;padding:10px;display:block;text-align:center;">Estimated Bike Finish: 5:05:17</strong></span><br/>					<p><strong>SWIM DETAILS</strong>
+					| Division Rank: 13										</p>
+					<table width="100%" border="0">
+						<thead>
+							<tr>
+								<th>Split Name</th>
+                                <th>Distance</th>
+                                <th>Split Time</th>
+                                <th><span title="The Race Time is the overall race clock to this point in the event.">Race Time</span></th>
+                                <th>Pace</th>
+                                <th width="5%">Division Rank</th>
+                                <th width="5%">Gender Rank</th>
+                                <th width="5%">Overall Rank</th>
+							</tr>
+						</thead>
+						<tbody>
+				</tbody>
+				<tfoot>
+				<tr>
+					<td><strong>Total</strong></td>
+					<td><strong>2.4 mi</strong></td>
+				  <td><strong>51:08</strong></td>
+					<td><strong>51:08</strong></td>
+					<td><strong>1:19/100m</strong></td>
+				  <td><strong>13</strong></td>
+				  <td><strong>13</strong></td>
+				  <td><strong>14</strong></td>
+				</tr>
+				</tfoot>
+				</table>
+									<p><strong>BIKE DETAILS </strong>					</p>
+					<table width="100%" border="0">
+					    <thead>
+					        <tr>
+					            <th>Split Name</th>
+                                <th>Distance</th>
+                                <th>Split Time</th>
+                                <th><span title="The Race Time is the overall race clock to this point in the event.">Race Time</span></th>
+                                <th>Pace</th>
+                                <th width="5%">Division Rank</th>
+                                <th width="5%">Gender Rank</th>
+                                <th width="5%">Overall Rank</th>
+					        </tr>
+					    </thead>
+<tr>
+	<td>9.4 mi</td>
+	<td>9.4 mi </td>
+	<td>22:14</td>
+	<td>1:15:48</td>
+	<td>25.48 mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>18.8 mi</td>
+	<td>9.3 mi </td>
+	<td>23:21</td>
+	<td>1:39:09</td>
+	<td>23.92 mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>28.1 mi</td>
+	<td>9.3 mi </td>
+	<td>17:29</td>
+	<td>1:56:38</td>
+	<td>31.95 mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>37.4 mi</td>
+	<td>9.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>46.7 mi</td>
+	<td>9.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>56 mi</td>
+	<td>9.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>65.3 mi</td>
+	<td>9.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>74.6 mi</td>
+	<td>9.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>83.9 mi</td>
+	<td>9.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>93.3 mi</td>
+	<td>9.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>102.6 mi</td>
+	<td>9.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				<tr>
+	<td>112 mi</td>
+	<td>9.4 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>-- mi/h</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+				</tbody>
+<tfoot>
+<tr>
+	<td><strong>Total</strong></td>
+	<td ><strong>112 mi</strong></td>
+  <td><strong>--:--</strong></td>
+	<td><strong>--:--</strong></td>
+	<td><strong>-- mi/h</strong></td>
+  <td ><strong>--</strong></td>
+  <td ><strong>--</strong></td>
+  <td ><strong>--</strong></td>
+</tr>
+</tfoot>
+</table>
+
+                    
+					<p><strong>RUN DETAILS </strong></p>
+					<table width="100%" border="0">
+					    <thead>
+					        <tr>
+					            <th>Split Name</th>
+                                <th>Distance</th>
+                                <th>Split Time</th>
+                                <th><span title="The Race Time is the overall race clock to this point in the event.">Race Time</span></th>
+                                <th>Pace</th>
+                                <th width="5%">Division Rank</th>
+                                <th width="5%">Gender Rank</th>
+                                <th width="5%">Overall Rank</th>
+					        </tr>
+					    </thead>
+<tbody>
+		<!-- 1 pk: runStart k: runTurn1 pd: 0 d: 1.48 --><tr>
+	<td>1.5 mi</td>
+	<td class="right">1.5 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn1 k: runTurn2 pd: 1.48 d: 1.58 --><tr>
+	<td>3.1 mi</td>
+	<td class="right">1.6 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn2 k: runTurn3 pd: 3.06 d: 1.56 --><tr>
+	<td>4.6 mi</td>
+	<td class="right">1.6 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn3 k: runTurn4 pd: 4.62 d: 1.32 --><tr>
+	<td>5.9 mi</td>
+	<td class="right">1.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn4 k: runTurn5 pd: 5.94 d: 1.09 --><tr>
+	<td>7 mi</td>
+	<td class="right">1.1 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn5 k: runTurn6 pd: 7.03 d: 1.61 --><tr>
+	<td>8.6 mi</td>
+	<td class="right">1.6 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn6 k: runTurn7 pd: 8.64 d: 1.48 --><tr>
+	<td>10.1 mi</td>
+	<td class="right">1.5 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn7 k: runTurn8 pd: 10.12 d: 1.59 --><tr>
+	<td>11.7 mi</td>
+	<td class="right">1.6 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn8 k: runTurn9 pd: 11.71 d: 1.55 --><tr>
+	<td>13.3 mi</td>
+	<td class="right">1.6 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn9 k: runTurn10 pd: 13.26 d: 1.32 --><tr>
+	<td>14.6 mi</td>
+	<td class="right">1.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn10 k: runTurn11 pd: 14.58 d: 1.09 --><tr>
+	<td>15.7 mi</td>
+	<td class="right">1.1 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn11 k: runTurn12 pd: 15.67 d: 1.61 --><tr>
+	<td>17.3 mi</td>
+	<td class="right">1.6 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn12 k: runTurn13 pd: 17.28 d: 1.48 --><tr>
+	<td>18.8 mi</td>
+	<td class="right">1.5 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn13 k: runTurn14 pd: 18.76 d: 1.59 --><tr>
+	<td>20.4 mi</td>
+	<td class="right">1.6 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn14 k: runTurn15 pd: 20.35 d: 1.55 --><tr>
+	<td>21.9 mi</td>
+	<td class="right">1.6 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn15 k: runTurn16 pd: 21.90 d: 1.32 --><tr>
+	<td>23.2 mi</td>
+	<td class="right">1.3 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn16 k: runTurn17 pd: 23.22 d: 1.1 --><tr>
+	<td>24.3 mi</td>
+	<td class="right">1.1 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         <!-- 1 pk: runTurn17 k: runEnd pd: 24.32 d: 1.88 --><tr>
+	<td>26.2 mi</td>
+	<td class="right">1.9 mi </td>
+	<td>--:--</td>
+	<td>--:--</td>
+	<td>--/mi</td>
+	<td class="right"></td>
+	<td class="right"></td>
+	<td class="right"></td>
+</tr>
+
+	         </tbody>
+<tfoot>
+<tr>
+	<td><strong>Total</strong></td>
+	<td class="right"><strong>26.2 mi</strong></td>
+    	<td><strong>--:--</strong></td>
+	<td><strong>--:--</strong></td>
+	<td><strong>--/mi</strong></td>
+    	<td class="right"><strong>--</strong></td>
+    	<td class="right"><strong>--</strong></td>
+    	<td class="right"><strong>--</strong></td>
+</tr>
+</tfoot>
+</table>
+
+					<p><strong>Transition Details</strong></p>
+					<table width="100%" border="0">
+						<tbody>
+																<tr>
+									<td>T1:  Swim-to-bike</td>
+									<td>2:26</td>
+								</tr>
+								                            <tr>
+                                <td>T2: Bike-to-run</td>
+                                <td>--:--</td>
+                            </tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+			</div>
+
+
+
+		</div>
+	</div>
+    
+        <!-- End: main content area -->
+
+    </div>
+
+
+
+
+
+<!-- Start IRONMAN Quantcast tag -->
+<script type="text/javascript">
+    qoptions={
+        qacct:"p-3fRk5b9IqK8fo"
+    };
+</script>
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<noscript>
+<img src="http://pixel.quantserve.com/pixel/p-3fRk5b9IqK8fo.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/>
+</noscript>
+<!-- End IRONMAN Quantcast tag -->
+<!-- Begin comScore Tag -->
+<!-- <script>
+    document.write(unescape("%3Cscript src='" + (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js' %3E%3C/script%3E"));
+</script>
+<script>
+    COMSCORE.beacon({
+        c1:2,
+        c2:3005619,
+        c3:"",
+        c4:"",
+        c5:"",
+        c6:"",
+        c15:""
+    });
+</script>
+<noscript>
+<img src="http://b.scorecardresearch.com/p?c1=2&c2=3005619&c3=&c4=&c5=&c6=&c15=&cj=1" />
+</noscript>-->
+<!-- End comScore Tag -->
+<script type="text/javascript" language="Javascript">setHeight();</script>
+</body>
+</html>
+
