@@ -1,0 +1,13 @@
+{
+  "name": "irontracker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "cheerio": "^0.20.0",
+    "express": "^4.13.4",
+    "urllib": "^2.9.1"
+  }
+}

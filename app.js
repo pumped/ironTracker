@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 
+var scraper = require('./scraper');
+
 app.use(express.static('public'));
 
 app.get('/getData', function (req, res) {
@@ -17,3 +19,20 @@ var server = app.listen(9871, function () {
   console.log('Example app listening at http://%s:%s', host, port);
 
 });
+
+//run scraper
+
+s = new scraper();
+
+function autoScrape() {
+	try {
+		s.scrape(386);
+	}
+	catch (e) {
+
+	}
+}
+
+autoScrape();
+
+//setInterval(autoScrape(), 1*1000*60);
