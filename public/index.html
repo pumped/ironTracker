@@ -7,67 +7,212 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="manifest" href="manifest.json">
+
+      	<link rel="apple-touch-icon" href="img/icon192.png">
+      	<link rel="apple-touch-icon" sizes="96x96" href="img/icon96.png">
+      	<link rel="apple-touch-icon" sizes="144x144" href="img/icon144.png">
+      	<link rel="apple-touch-icon" sizes="192x192" href="img/icon192.png">
+      	<meta name="apple-mobile-web-app-capable" content="yes">
+
         <link rel="stylesheet" type="text/css" href="css/leaflet.css">
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 
         <script type="text/javascript" src="js/leaflet.js"></script>
-        <script type="text/javascript" src="js/bootstrap.js"></script>
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+      	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+      	<script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+      	<script type="text/javascript" src="js/sidebar.js"></script>
 
     </head>
     <body>
+
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <!-- Add your site or application content here -->
-        <div id="map"></div>
+        <nav class="navbar navbar-default">
+          <div class="">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle sidebar-toggle collapsed pull-left" data-target="#sidebar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="?">Athlete Tracker</a>
+            </div>
 
-        <div class="divider"></div>
+          </div><!-- /.container-fluid -->
+        </nav>
 
-        <div class="container">
+        <div id="sidebar">
+        	<div class="scroll-container">
+        		<!--<div class="sidebar-branding">
+        			<a class="sidebar-brand" href="?">Athlete Tracker</a>
+        		</div>-->
+        		<div id="MainMenu" class="menuGroup">
 
+        		</div>
+            <div id="AddMenu" class="menuGroup">
+        			<a class="list-group-item" data-toggle="modal" data-target="#addAthleteModal" data-whatever="@mdo"><span class="glyphicon glyphicon-plus menu-icon"></span> Add Athlete</a>
+        		</div>
+
+        	</div>
         </div>
 
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-3 col-xs-6 stat">
-                <div class="large-stat-title">Athlete</div>
-                <div class="large-stat" id="athleteName">xxxx xxxxxx</div>
-            </div>
-            <div class="col-md-3 col-xs-6 stat">
-                <div class="large-stat-title">Next Sighting</div>
-                <div class="large-stat" id="athleteName">N/A</div>
-            </div>
-            <div class="col-md-3 col-xs-6 stat">
-                <div class="large-stat-title">Est. Leg Finish</div>
-                <div class="large-stat" id="legFinish">xx:xx:xx</div>
-            </div>
-            <div class="col-md-3 col-xs-6 stat">
-                <div class="large-stat-title">Est. Leg Finish Time</div>
-                <div class="large-stat" id="legFinishTime">x:xx PM</div>
-            </div>
-            <div class="col-md-3 col-xs-6 stat">
-                <div class="large-stat-title">Distance Covered</div>
-                <div class="large-stat" id="distanceCovered">xxKm</div>
-            </div>
-            <div class="col-md-3 col-xs-6 stat">
-                <div class="large-stat-title">Distance Remaining</div>
-                <div class="large-stat" id="distanceRemaining">xxkm</div>
-            </div>
-          </div>
+        <div id="main" class="">
 
-          <div class="row">
-            <div class="col-md-12 splits">
-                
+
+
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#tab_map" aria-controls="home" role="tab" data-toggle="tab">Map</a></li>
+            <li role="presentation"><a href="#tab_splits" aria-controls="profile" role="tab" data-toggle="tab">Splits</a></li>
+          </ul>
+
+          <div class="tab-content">
+
+            <div role ="tabpanel" class="tab-pane active" id="tab_map">
+
+
+
+
+              <div class="container-fluid">
+                <div class="row">
+                  <div id="map"></div>
+                  <div class="divider"></div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3 col-xs-6 stat">
+                      <div class="large-stat-title">Athlete</div>
+                      <div class="large-stat" id="athleteName">xxxx xxxxxx</div>
+                  </div>
+                  <div class="col-md-3 col-xs-6 stat">
+                      <div class="large-stat-title">Next Sighting</div>
+                      <div class="large-stat" id="athleteName">N/A</div>
+                  </div>
+
+                  <div class="col-md-3 col-xs-6 stat">
+                      <div class="large-stat-title">Est. Leg Finish</div>
+                      <div class="large-stat" id="legFinish">xx:xx:xx</div>
+                  </div>
+                  <div class="col-md-3 col-xs-6 stat">
+                      <div class="large-stat-title">Est. Leg Finish Time</div>
+                      <div class="large-stat" id="legFinishTime">x:xx PM</div>
+                  </div>
+
+                  <div class="col-md-3 col-xs-6 stat">
+                      <div class="large-stat-title">Distance Covered</div>
+                      <div class="large-stat" id="distanceCovered">xxKm</div>
+                  </div>
+                  <div class="col-md-3 col-xs-6 stat">
+                      <div class="large-stat-title">Distance Remaining</div>
+                      <div class="large-stat" id="distanceRemaining">xxkm</div>
+                  </div>
+
+                  <div class="col-md-3 col-xs-6 stat">
+                      <div class="large-stat-title">Est. Pace</div>
+                      <div class="large-stat" id="athletePace">N/A</div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+            <div role ="tabpanel" class="tab-pane" id="tab_splits">
+              <div class="container-fluid">
+
+                <div class="row">
+                  <div class="col-md-12 splits" id="splits">
+                    <table class="table" id="tbl_swim">
+                      <caption>Swim</caption>
+                      <thead>
+                        <tr> <th>Split</th> <th>Distance</th> <th>Time</th> <th>Race Time</th> <th>Pace</th> </tr>
+                      </thead>
+                      <tbody>
+
+                      </tbody>
+                    </table>
+
+                    <table class="table" id="tbl_bike">
+                      <caption>Bike</caption>
+                      <thead>
+                        <tr> <th>Split</th> <th>Distance</th> <th>Time</th> <th>Race Time</th> <th>Pace</th> </tr>
+                      </thead>
+                      <tbody>
+
+                      </tbody>
+                    </table>
+
+                    <table class="table" id="tbl_run">
+                      <caption>Run</caption>
+                      <thead>
+                        <tr> <th>Split</th> <th>Distance</th> <th>Time</th> <th>Race Time</th> <th>Pace</th> </tr>
+                      </thead>
+                      <tbody>
+
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+
+
+        <template id="splitrow">
+          <tr>
+            <th class="split_name" scope="row">1.9km</th>
+            <td class="split_distance" >1.9km</td>
+            <td class="split_time" >42:36</td>
+            <td class="split_rtime" >42:36</td>
+            <td class="split_pace" >2:14/100m</td>
+          </tr>
+        </template>
+
+
+
+    <div class="modal fade" id="addAthleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">Add New Athlete</h4>
+          </div>
+          <div class="modal-body">
+            <form id="form_addAthlete">
+              <div class="form-group">
+                <label for="recipient-name" class="control-label">Bib Number:</label>
+                <input type="number" class="form-control" id="add-bibNumber" >
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="control-label">Start Time:</label>
+                <input type="time" class="form-control" id="add-startTime" >
+              </div>
+            </form>
+            <p>Note: Start time is required for more precise tracking. If you're unsure, leave it blank and an estimate will be used. You can change it any time by adding your athlete again.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button id="btn_addAthlete" type="button" class="btn btn-primary">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     </body>
 
+
+    <script type="text/javascript" src="js/athletes.js"></script>
     <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+
 </html>

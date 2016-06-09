@@ -14,7 +14,7 @@ dataLoader.prototype.onData = function(callback) {
 }
 
 dataLoader.prototype.runCallbacks = function(event, data) {
-	if (!data) data = this;	
+	if (!data) data = this;
 
 	if (this.callbacks[event]) {
 		for (i in this.callbacks[event]) {
@@ -29,7 +29,7 @@ dataLoader.prototype.runCallbacks = function(event, data) {
 dataLoader.prototype.getData = function(athlete) {
 	that = this;
 	$.getJSON("data/"+athlete+".json", function(data) {
-		//console.log(data);
+		console.log(data);
 		that.athleteData = data;
 		that.runCallbacks("onData", data);
 		//console.log(that.estimatedDistance());
@@ -44,7 +44,7 @@ dataLoader.prototype.estimatedDistance = function() {
 
 
 
-	console.log(latest);
+	//console.log(latest);
 
 	if (latest[0] == "run") {
 		var pace = latest[1].pace.split("/")[0];
@@ -62,7 +62,7 @@ dataLoader.prototype.estimatedDistance = function() {
 	var legStartDistance = parseInt(latest[1].name.split(" ")[0]);
 	var splitTime = this._calculateRaceTimeOffset(latest[1].race_time);
 	var hours = splitTime / 60 / 60;
-	
+
 	//workout distance
 	var distance = (legStartDistance + (avgSpeed * hours)) * 1000;
 
@@ -75,6 +75,7 @@ dataLoader.prototype.estimatedDistance = function() {
 	metrics.distance = distance;
 	metrics.avgSpeed = avgSpeed;
 	metrics.leg = latest[0];
+	metrics.splits = this.athleteData.splits;
 
 	return metrics;
 
@@ -83,6 +84,7 @@ dataLoader.prototype.estimatedDistance = function() {
 dataLoader.prototype.calculateMetrics = function(distance, avgSpeed, legStartDistance) {
 	//distance remaining
 	var latest = this.latestCheckpoint();
+	//console.log(latest);
 	var distanceRemaining = (latest[1].legDistance*1000) - distance;
 
 	//console.log("Distance Remaining: " + distanceRemaining);
@@ -90,7 +92,7 @@ dataLoader.prototype.calculateMetrics = function(distance, avgSpeed, legStartDis
 	//est leg finish time
 	var splitDistanceRemaining = (latest[1].legDistance*1000) - legStartDistance*1000;
 	var splitTimeRemaining = ((splitDistanceRemaining/1000) / avgSpeed*60*60);
-	//console.log("splitTimeRemaining: " + splitDistanceRemaining);	
+	//console.log("splitTimeRemaining: " + splitDistanceRemaining);
 	var splitTime = this._convertTimeToSeconds(latest[1].race_time);
 	var legFinish = splitTime + splitTimeRemaining;
 
@@ -104,14 +106,11 @@ dataLoader.prototype.calculateMetrics = function(distance, avgSpeed, legStartDis
 	var legFinishString = this._createTimeString(legFinishTime);
 	//console.log(legFinishString);
 
-
-	
-
 	var metrics = {
 		"distanceRemaining":distanceRemaining,
 		"legFinishTime": legFinishString,
 		"legFinish": this._convertSecondsToTime(legFinish),
-		"name": this.athleteData.name
+		"name": this.athleteData.name,
 	};
 
 	return metrics;
@@ -129,12 +128,23 @@ dataLoader.prototype._createTimeString = function(time) {
 		hours = 12;
 	}
 
-	return hours + ":" + time.getMinutes() + " " +ap;
+	var mins = time.getMinutes();
+	if (mins < 10) {
+		mins = "0" + mins;
+	}
+
+	return hours + ":" + mins + " " +ap;
 }
 
 dataLoader.prototype.getCurrentRaceTime = function() {
 
-	var currentDate = new Date();
+	//SET THIS TO CURRENT DATE
+	var currentDate = new Date(2015,05,14,20,53,00);//new Date();
+
+	//DELETE this
+	var thisDate = new Date();
+	currentDate.setSeconds(thisDate.getSeconds());
+	currentDate.setMinutes(thisDate.getMinutes());
 
 	//console.log(this.raceStart);
 
@@ -177,10 +187,10 @@ dataLoader.prototype._paceToSpeed = function(pace) {
 
 dataLoader.prototype.latestCheckpoint = function() {
 	// determine latest checkpoint from data
-	
+
 	//check run length
 	if (this.athleteData.splits.run.length) {
-		console.log("Running")
+		//console.log("Running")
 		var runSplits = this.athleteData.splits.run;
 		run = runSplits[runSplits.length-1];
 		run.legDistance = this.legDistance.run;

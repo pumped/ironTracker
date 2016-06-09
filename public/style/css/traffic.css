@@ -1,0 +1,35 @@
+#traffic h3 {
+	text-align:center;
+}
+
+#traffic h4 {
+	padding-top:10px;	
+}
+
+#traffic {
+	/*width:500px;*/
+	margin:auto;
+	/*text-align:center;*/
+}
+
+#mrtgGraphs {
+	width:500px;
+	margin:auto;
+}
+
+.liveLink {
+	font-size:10px;
+	text-align:right;
+	display:block;
+}
+
+@media (max-width: 468px) { 
+	#traffic .dial-title{
+		font-size:1em;
+	}
+
+	#traffic .dial-icon {
+		display:none;
+	}
+}
+		

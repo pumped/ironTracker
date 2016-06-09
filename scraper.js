@@ -2,10 +2,10 @@
 // Example pages:
 // http://track.ironman.com/newathlete.php?rid=1143240085&race=arizona&bib=6&v=3.0&beta=&1416153600
 // http://track.ironman.com/newathlete.php?rid=1143240085&race=arizona&bib=24&v=3.0&beta=&1416150900
-httpsync = require('httpsync');
+urllib = require('urllib');
 cheerio = require('cheerio');
 var fs = require('fs');
-verbose = false;
+verbose = true;
 
 function scraper() {
 	this.raceid = 2147483682;
@@ -27,20 +27,33 @@ scraper.prototype.scrape = function(bib) {
 	if(verbose) console.log("Checking athlete: " + bib);
 
 	// --- Connect & Download ---
+	var url = 'http://track.ironman.com/newathlete.php?rid='+this.raceid+'&bib='+bib+'&v=3.0';
+
 	var options = {
-	  url: 'http://track.ironman.com/newathlete.php?rid='+this.raceid+'&bib='+bib+'&v=3.0',	
 	  method: 'GET',
 	  useragent: 'Mozilla/5.0',
 	};
-	var htmldata = httpsync.get(options).end().data.toString();
-	var $ = cheerio.load(htmldata);
+	//var htmldata = httpsync.get(options).end().data.toString();
+
+	var that = this;
+
+	urllib.request(url, options).then(function(result){
+		that._dataLoaded(athlete,result.data.toString());
+	}).catch(function(err) {
+		console.log(err);
+	});
+
+};
+
+scraper.prototype._dataLoaded = function(athlete,data) {
+	var $ = cheerio.load(data);
 
 	// --- Get name or skip on error ---
 	try{
 		athlete.name = $('.eventResults .moduleContentOuter .moduleContentInner section header h1').html().split('>')[3];
 		if(verbose) console.log('Name: ' + athlete.name);
 	} catch(e) {
-		console.log("Error trying ID " + bib + ". Skipping...");
+		console.log("Error trying ID " + athlete.bib + ". Skipping...");
 	}
 
 	//process and store
@@ -61,16 +74,16 @@ scraper.prototype.processAthlete = function($, athlete) {
 		if(verbose) console.log("");
 
 		// --- BIKE ---
-		var htmlbike = $('.athlete-table-details table').eq(1).children('> tr');
+		var htmlbike = $('.athlete-table-details table').eq(1).children('tr');
 		athlete.bike = new Array();
-		for(var row = 0; row < htmlbike.length; row++){ 
+		for(var row = 0; row < htmlbike.length; row++){
 			var new_value = htmlbike.eq(row).children('td').eq(3).html();
 			athlete.bike.push(new_value);
 			if(verbose) console.log('bike ('+row+'): ' + new_value);
-			
+
 			//if split has data
 			if(new_value.charAt(0) != '-') {
-				console.log(new_value.charAt(0));
+				//console.log(new_value.charAt(0));
 				athlete.times.push(new_value);
 
 				//get full splits
@@ -82,8 +95,8 @@ scraper.prototype.processAthlete = function($, athlete) {
 					split[brColumns[col]] = htmlbike.eq(row).children('td').eq(col).html();
 				}
 				//push to splits
-				athlete.splits.bike.push(split);			
-			}		
+				athlete.splits.bike.push(split);
+			}
 		}
 
 		if(verbose) console.log("");
@@ -95,9 +108,9 @@ scraper.prototype.processAthlete = function($, athlete) {
 			var new_value = htmlrun.eq(row).children('td').eq(3).html();
 			athlete.run.push(new_value);
 			if(verbose) console.log('run ('+row+'): ' + new_value);
-			
+
 			if(new_value.charAt(0) != '-'){
-				console.log(new_value.charAt(0));
+				//console.log(new_value.charAt(0));
 				athlete.times.push(new_value);
 
 
@@ -114,13 +127,13 @@ scraper.prototype.processAthlete = function($, athlete) {
 						split[brColumns[col]] = htmlrun.eq(row).children('td').eq(col).html();
 					}
 					//push to splits
-					athlete.splits.run.push(split);			
-				}	
-			} 
+					athlete.splits.run.push(split);
+				}
+			}
 		}
 
 		//athletes.push(athlete);
-		console.log(JSON.stringify(athlete));
+		//console.log(JSON.stringify(athlete));
 
 		fs.writeFile("public/data/"+athlete.bib+".json", JSON.stringify(athlete), function(err){
 			console.log(err);
@@ -129,25 +142,14 @@ scraper.prototype.processAthlete = function($, athlete) {
 		return athlete;
 };
 
+module.exports = scraper;
 
-s = new scraper();
 
-function autoScrape() {
-	try {
-		s.scrape(386);
-		s.scrape(2);
-		s.scrape(12);
-	}
-	catch (e) {
-		
-	}
-}
 
-setTimeout(autoScrape(), 10*1000*60);
 /*
 
 // --- Sort results ---
-athletes.sort(function(a,b) { 
+athletes.sort(function(a,b) {
 	if(a.times.length < b.times.length) return 1;
 	if(b.times.length < a.times.length) return -1;
 
@@ -155,7 +157,7 @@ athletes.sort(function(a,b) {
 
 	var asplit = a.times[a.times.length-1].split(':');
 	var bsplit = b.times[b.times.length-1].split(':');
-	
+
 	if(asplit[0] > bsplit[0]) return 1;
 	if(asplit[0] < bsplit[0]) return -1;
 

@@ -4,7 +4,7 @@ body {
 }
 
 .navbar {
-	background-color:#e22f2f;
+	background-color:#f3f3f4;
 	color:#fff;
 	margin-bottom:0;
 	border-left:0;
@@ -43,28 +43,9 @@ body {
 		background-color:transparent;
 }
 
-.nav-tabs li {
-	width:50%;
-	text-align:center;
-	border-right:1px solid #ccc;
-	background-color:#ddd;
-}
-
-.nav-tabs li:last-child {
-	border-right:0;
-}
-
-.nav-tabs>li.active {
-	background-color:#fff;
-}
-
-.nav-tabs>li.active>a:hover {
-	border:0;
-}
-
 
 #main{
-	background-color: #fff;
+	background-color: #f3f3f4;
 	/*background-color: #e3e3e8;*/
 	/*background-color: #fff;*/
 	padding-left:210px;
@@ -174,7 +155,7 @@ body {
 }
 
 #sidebar .menuGroup a:hover {
-	/*background-color:#293847;*/
+	background-color:#293847;
 }
 
 #sidebar .menuGroup a[aria-expanded="true"] {
@@ -276,9 +257,6 @@ body {
 }
 
 
-#addAthleteModal {
-	z-index: 100000;
-}
 
 
 
