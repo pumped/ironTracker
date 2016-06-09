@@ -10,6 +10,8 @@ function eventMap() {
 
 	this.othMarkers = {};
 
+	this.userCourseLocations = {"bike":[],"run":[]};
+
 	//add base layer
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicHVtcGVkIiwiYSI6Ik5VTjlka2MifQ.0k-6s3mWkXrSYDcQrrLGDg', {
 	    attribution: '',
@@ -32,29 +34,75 @@ function eventMap() {
 		getRun(function() {
 			that.setupAthleteMarker();
 			that.runCallbacks("ready");
+			that.map.locate();
 		});
 	});
-/*
-	this.map.locate();
+
+
 	this.map.on('locationfound', function(e) {
 		var radius = e.accuracy / 2;
 		console.log(radius);
 		console.log(e)
 
 		L.marker(e.latlng).addTo(that.map);
-		L.circle(e.latlng, radius).addTo(that.map);
+		L.circle(e.latlng, 50).addTo(that.map);
 		//that.map.panTo(e.latlng)
-	});*/
 
-
-	//locate user
-	//this.map.locate({setView: true, maxZoom: 16});
+		that.findNearestPoints(e.latlng);
+	});
 
 }
 
 
-eventMap.prototype.resize = function() {
+eventMap.prototype.findNearestPoints = function(location) {
+	var searchDistance = 50;
+	//var type = "run";
+	//for each point in geoJson
+	for (var type in this.userCourseLocations) {
+		var coordinates = this.eventGeoJson[type].features[0].geometry.coordinates;
 
+		console.log("locations");
+		for (var i in coordinates) {
+			var coords = Array.prototype.slice.call(coordinates[i]).reverse();
+			var line = L.polyline([coords, location]);
+			if (L.GeometryUtil.length(line) <= searchDistance) {
+					//var x = L.marker(coords, {icon: this.othIcon}).addTo(this.map);
+
+					//distance on leg
+					var courseDistance = this.distanceHash[type][i];
+					this.userCourseLocations[type].push(courseDistance);
+			}
+		}
+	}
+
+}
+
+eventMap.prototype.calculateTimeToHere = function(metrics) {
+	console.log();
+	var fuzz = 1000; //m
+
+	var leg = metrics.leg;
+	var closest = 18000000000;
+
+	//console.log(metrics);
+	for (i in this.userCourseLocations[leg]) {
+			//console.log(location)
+		var location = this.userCourseLocations[leg][i];
+		if (location >= metrics.distance-fuzz && location < closest) {
+			closest = location;
+		}
+	}
+	console.log(closest);
+
+	var distance = closest - metrics.distance;
+	var time = (distance/1000) / avgSpeed * 60 * 60;
+
+	if (closest == 18000000000) {
+		time = null;
+		distance = null;
+	}
+
+	return {"time": time, "distance":distance};
 }
 
 eventMap.prototype.onReady = function(callback) {
@@ -189,13 +237,21 @@ eventMap.prototype.pruneMarkers = function(athletes, athID) {
 }
 
 eventMap.prototype.setDistance = function(metrics) {
-		this.runCallbacks("distanceChanged", metrics);
+	//add map things to metrics
+	if (metrics) {
 
-		var location = this.calculateLocation(metrics);
-		if (location) {
-			this.markerAthlete.setLatLng(location);
-			this.map.panTo(location);
-		}
+			var timeDistTo = this.calculateTimeToHere(metrics);
+			metrics.timeDistTo = timeDistTo;
+
+			this.runCallbacks("distanceChanged", metrics);
+
+			var location = this.calculateLocation(metrics);
+			if (location) {
+				this.markerAthlete.setLatLng(location);
+				//this.map.panTo(location);
+			}
+
+	}
 };
 
 eventMap.prototype._subDistance = function(points, distance, type) {
@@ -338,6 +394,7 @@ $("#addAthleteModal").on("shown.bs.modal",function(){
 
 e.onDistanceChanged(function updateDistance(metrics) {
 	if (metrics.hasOwnProperty("avgSpeed")) {
+		$('#timeAway').html(timeSince(metrics.timeDistTo.time));
 		$('#distanceCovered').html(Math.round(metrics.distance/100)/10 + " km");
 		$('#legFinish').html(metrics.legFinish);
 		$('#legFinishTime').html(metrics.legFinishTime);
@@ -445,3 +502,41 @@ if ('serviceWorker' in navigator) {
 }
 
 console.log("workers started");
+
+
+
+
+
+function timeSince(seconds) {
+
+		if (seconds == null) {
+			return "-"
+		}
+
+	/*	if (seconds < 0) {
+			return "now";
+		}*/
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+        return interval + " years";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " months";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " days";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " hours";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) {
+        return interval + " minutes";
+    }
+    return Math.floor(seconds) + "s";
+}

@@ -43,7 +43,7 @@ athleteList.prototype.save = function () {
 athleteList.prototype.load = function () {
   if (typeof(Storage) !== "undefined") {
     var athletes = JSON.parse(localStorage.getItem("athletes"));
-    console.log(athletes);
+    //console.log(athletes);
     if (athletes) {
       this.athletes = athletes;
     }
