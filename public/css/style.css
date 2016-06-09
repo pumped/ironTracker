@@ -7,6 +7,24 @@ html, body{
 	min-height:200px;
 }
 
+@media (min-height:650px) {
+  #map {
+    min-height:260px;
+  }
+}
+
+@media (min-height:700px) {
+  #map {
+    min-height:300px;
+  }
+}
+
+@media (min-height:800px) {
+  #map {
+    min-height:400px;
+  }
+}
+
 .divider {
 	height:5px;
 	background-color:#e22f2f;
@@ -42,4 +60,17 @@ html, body{
 	.large-stat-title {
 		font-size:25px;
 	}
+}
+
+#MainMenu a.active .deleteAthlete {
+  color:#fff;
+}
+
+.deleteAthlete {
+  color:#6f6f6f;
+  float:right;
+}
+
+#AddMenu {
+  margin-bottom: 80px;
 }

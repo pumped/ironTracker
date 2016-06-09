@@ -1,6 +1,7 @@
 function dataLoader() {
 	this.callbacks = {};
 	this.athleteData;
+	this.dataSets = {};
 	this.currentRaceTime = 21486;
 	//this.raceStart = new Date(2015,04,14,08,15,00);
 	this.raceStart = new Date(2015,05,14,7,53,00);
@@ -11,6 +12,11 @@ function dataLoader() {
 dataLoader.prototype.onData = function(callback) {
 	if (!this.callbacks.ready) this.callbacks.onData = [];
 	this.callbacks.onData.push(callback);
+}
+
+dataLoader.prototype.onDataChanged = function(callback) {
+	if (!this.callbacks.ready) this.callbacks.onDataChanged = [];
+	this.callbacks.onDataChanged.push(callback);
 }
 
 dataLoader.prototype.runCallbacks = function(event, data) {
@@ -26,21 +32,36 @@ dataLoader.prototype.runCallbacks = function(event, data) {
 	}
 }
 
+dataLoader.prototype.setAthlete = function(athlete) {
+	this.athlete = athlete;
+	if (this.dataSets.hasOwnProperty(athlete)){
+		this.runCallbacks("onDataChanged",this.dataSets[athlete]);
+	}
+
+	this.getData(athlete);
+}
+
 dataLoader.prototype.getData = function(athlete) {
 	that = this;
 	$.getJSON("data/"+athlete+".json", function(data) {
-		console.log(data);
+		//console.log(data);
+
 		that.athleteData = data;
+		that.dataSets[athlete] = data;
+
 		that.runCallbacks("onData", data);
-		//console.log(that.estimatedDistance());
+
+		if (athlete == that.athlete) {
+			that.runCallbacks("onDataChanged", data);
+		}
 	});
 };
 
-dataLoader.prototype.estimatedDistance = function() {
-	if (!this.athleteData) return;
+dataLoader.prototype.estimatedDistance = function(bib) {
+	if (!this.dataSets.hasOwnProperty(bib)) return;
 
 	//estimate speed
-	var latest = this.latestCheckpoint();
+	var latest = this.latestCheckpoint(bib);
 
 
 
@@ -71,19 +92,19 @@ dataLoader.prototype.estimatedDistance = function() {
 	//console.log("Distance: " + distance);
 
 
-	var metrics = this.calculateMetrics(distance, avgSpeed, legStartDistance);
+	var metrics = this.calculateMetrics(bib, distance, avgSpeed, legStartDistance);
 	metrics.distance = distance;
 	metrics.avgSpeed = avgSpeed;
 	metrics.leg = latest[0];
-	metrics.splits = this.athleteData.splits;
+	metrics.splits = this.dataSets[bib].splits;
 
 	return metrics;
 
 }
 
-dataLoader.prototype.calculateMetrics = function(distance, avgSpeed, legStartDistance) {
+dataLoader.prototype.calculateMetrics = function(bib, distance, avgSpeed, legStartDistance) {
 	//distance remaining
-	var latest = this.latestCheckpoint();
+	var latest = this.latestCheckpoint(bib);
 	//console.log(latest);
 	var distanceRemaining = (latest[1].legDistance*1000) - distance;
 
@@ -110,7 +131,8 @@ dataLoader.prototype.calculateMetrics = function(distance, avgSpeed, legStartDis
 		"distanceRemaining":distanceRemaining,
 		"legFinishTime": legFinishString,
 		"legFinish": this._convertSecondsToTime(legFinish),
-		"name": this.athleteData.name,
+		"name": this.dataSets[bib].name,
+		"bib": bib
 	};
 
 	return metrics;
@@ -185,30 +207,31 @@ dataLoader.prototype._paceToSpeed = function(pace) {
 	return Number(time);
 }
 
-dataLoader.prototype.latestCheckpoint = function() {
+dataLoader.prototype.latestCheckpoint = function(bib) {
 	// determine latest checkpoint from data
+	var athleteData = this.dataSets[bib];
 
 	//check run length
-	if (this.athleteData.splits.run.length) {
+	if (athleteData.splits.run.length) {
 		//console.log("Running")
-		var runSplits = this.athleteData.splits.run;
+		var runSplits = athleteData.splits.run;
 		run = runSplits[runSplits.length-1];
 		run.legDistance = this.legDistance.run;
 		return ["run",run]; //fix
 	}
 
 	//check bike length
-	if (this.athleteData.splits.bike.length) {
+	if (athleteData.splits.bike.length) {
 		//console.log("cycling");
-		var bikeSplits = this.athleteData.splits.bike;
+		var bikeSplits = athleteData.splits.bike;
 		bike = bikeSplits[bikeSplits.length-1];
 		bike.legDistance = this.legDistance.bike;
 		return ["bike",bike];
 	}
 
 	//check swim length
-	if (this.athleteData.splits.swim.length) {
-		var swimSplits = this.athleteData.splits.swim;
+	if (athleteData.splits.swim.length) {
+		var swimSplits = athleteData.splits.swim;
 		swim = swimSplits[swimSplits.length-1];
 		swim.legDistance = this.legDistance.swim;
 		return ["swim",swim];

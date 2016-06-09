@@ -1,22 +1,29 @@
  var block = false;
 
+ function sidebarActive() {
+   $("#sidebar .menuGroup a.list-group-item").each(function(){
+    if ($(this).attr('href') == window.location.hash) {
+      $(this).addClass('active');
+      /*if ($(this).parent().attr("id") != "MainMenu") {
+        $(this).parent().collapse('show')
+      }*/
+    } else {
+       $(this).removeClass('active');
+     }
+  });
+ }
+
  $(function() {
 
 	$("html").swipe( { swipeStatus:swipe2, allowPageScroll:"auto"} );
 	$("#sidebar").swipe( { swipeStatus:swipe2, allowPageScroll:"auto"} );
 
 	$(".sidebar-toggle").click(toggleSidebar);
-	$("#sidebar .menuGroup a.list-group-item").each(function(){
-		if ($(this).attr('href') == window.location.search) {
-			$(this).addClass('active');
-			if ($(this).parent().attr("id") != "MainMenu") {
-				$(this).parent().collapse('show')
-			}
-		}
-	});
 
-  $("#sidebar").on("click", ".menuGroup a",function selectMenuItem(){
+
+  $("#sidebar").on("click", ".menuGroup a.list-group-item",function selectMenuItem(){
     hideSidebar();
+    //sidebarActive();
   });
 
 	$(window).resize(function() {
@@ -28,6 +35,7 @@
 			}
 		}*/
 	});
+
 
 
 	function isOpen() {
@@ -42,11 +50,13 @@
 			hideSidebar();
 		} else {
 			$('#sidebar').animate({left:'0px'},200);
+      $("#main").addClass("open");
 		}
 	}
 
   function hideSidebar() {
     $('#sidebar').animate({left:'-220px'},200);
+    $("#main").removeClass("open");
   }
 
 	function isScrolling(event, phase, direction, distance) {
@@ -88,8 +98,10 @@
 			if (distance > 50) {
 				if (direction == 'left') {
 					newPos = -220;
+          $("#main").removeClass("open");
 				} else if (direction == 'right') {
 					newPos = 0;
+          $("#main").addClass("open");
 				} else {
 					$('#sidebar').animate({left:startPos+'px'},200);
 					//$('#power').animate({left:'0px'},200);
@@ -100,6 +112,7 @@
 				//$('#power').animate({left:(newPos+220)+'px'},200);
 			} else {
 				$('#sidebar').animate({left:startPos+'px'},200);
+        $("#main").removeClass("open");
 				//$('#power').animate({left:'0px'},200);
 			}
 			return true;

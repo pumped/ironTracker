@@ -4,14 +4,32 @@ function athleteList() {
       "name": "Luke MCKENZIE",
       "startTime": "8:05"
     },*/
-    386: {
+    /*386: {
       "name": "Glen HARKER",
       "startTime": "8:05"
-    }
+    }*/
   };
 
   this.load();
+
+  var that = this;
+  //setup menu item delete buttons
+  $("#MainMenu").on("click", "a.list-group-item .deleteAthlete", function() {
+      var bib = $(this).data("bib");
+      that.deleteAthlete(bib);
+      return false;
+  });
 }
+
+athleteList.prototype.deleteAthlete = function (bib) {
+  if (this.athletes.hasOwnProperty(bib)) {
+    delete this.athletes[bib];
+  };
+
+  this.save();
+
+  this.updateDom();
+};
 
 athleteList.prototype.save = function () {
   if (typeof(Storage) !== "undefined") {
@@ -74,9 +92,11 @@ athleteList.prototype.updateDom = function() {
       var name = "#"+bib;
     }
 
-    var dom = '<a class="list-group-item" href="#'+bib+'"><span class="glyphicon glyphicon-user menu-icon"></span> '+name+'</a>';
+    var dom = '<a class="list-group-item" href="#'+bib+'"><span class="glyphicon glyphicon-user menu-icon"></span> '+name+'<span data-bib="'+bib+'" class="glyphicon glyphicon-remove deleteAthlete"></span></a> ';
     $("#MainMenu").append(dom);
   }
+
+  sidebarActive();
 
 }
 
@@ -116,7 +136,12 @@ athleteList.prototype.updateAthlete = function(data) {
         this.updateDom();
       }
     } else {
-      console.error("Athlete data for a non-existant athlete has been loaded!!!")
+      this.athletes[data.bib] = {};
+      this.athletes[data.bib].name = data.name;
+      console.debug("Athlete data for a non-existant athlete has been loaded!!!");
+
+      this.save();
+      this.updateDom();
     }
   }
 }

@@ -8,6 +8,8 @@ function eventMap() {
 	this.eventGeoJson = {};
 	this.distanceHash = {};
 
+	this.othMarkers = {};
+
 	//add base layer
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicHVtcGVkIiwiYSI6Ik5VTjlka2MifQ.0k-6s3mWkXrSYDcQrrLGDg', {
 	    attribution: '',
@@ -32,7 +34,17 @@ function eventMap() {
 			that.runCallbacks("ready");
 		});
 	});
+/*
+	this.map.locate();
+	this.map.on('locationfound', function(e) {
+		var radius = e.accuracy / 2;
+		console.log(radius);
+		console.log(e)
 
+		L.marker(e.latlng).addTo(that.map);
+		L.circle(e.latlng, radius).addTo(that.map);
+		//that.map.panTo(e.latlng)
+	});*/
 
 
 	//locate user
@@ -41,6 +53,9 @@ function eventMap() {
 }
 
 
+eventMap.prototype.resize = function() {
+
+}
 
 eventMap.prototype.onReady = function(callback) {
 	if (!this.callbacks.ready) this.callbacks.ready = [];
@@ -100,14 +115,31 @@ eventMap.prototype.processGeoJSON = function(type, geoJson) {
 };
 
 eventMap.prototype.setupAthleteMarker = function() {
-	this.markerAthlete = L.marker([-16.92142702639103, 145.7787742651999]).addTo(this.map);
+	var AthIcon = L.Icon.extend({
+    options: {
+			iconUrl: 'img/marker-icon-2x.png',
+      iconSize:     [25, 41],
+			iconAnchor:   [12.5, 41]
+    }
+	});
+
+	var OthIcon = L.Icon.extend({
+    options: {
+			iconUrl: 'img/marker-icon.png',
+      iconSize:     [13, 21],
+			iconAnchor:   [7.5, 21]
+    }
+	});
+
+	var athIcon = new AthIcon();
+	this.othIcon = new OthIcon();
+	this.markerAthlete = L.marker([-16.92142702639103, 145.7787742651999], {icon: athIcon}).addTo(this.map);
+	//this.othMarkers[0] = L.marker([-16.92142702639103, 145.7787742651999], {icon: othIcon}).addTo(this.map);
 };
 
-eventMap.prototype.setDistance = function(metrics) {
+eventMap.prototype.calculateLocation = function(metrics) {
 	if (!metrics) return;
 	if (!metrics.hasOwnProperty("distance")) return;
-
-	//console.log(this.eventGeoJson);
 
 	try {
 		var coordinates = this.eventGeoJson[metrics.leg].features[0].geometry.coordinates;
@@ -124,17 +156,46 @@ eventMap.prototype.setDistance = function(metrics) {
 			pos[1]
 			);
 
-		this.markerAthlete.setLatLng(athletePos);
-		//console.log("pos");
-		//console.log(athletePos);
+		return athletePos;
+
 	}	catch(err) {
 		console.error(err);
 	}
 
+
+
+}
+
+eventMap.prototype.updateOtherMarkers = function(metrics) {
+	//console.log(metrics);
+	var location = this.calculateLocation(metrics);
+	if (location) {
+		if (!this.othMarkers.hasOwnProperty(metrics.bib)) {
+			this.othMarkers[bib] = L.marker(location, {icon: this.othIcon}).addTo(this.map);
+		} else {
+			this.othMarkers[bib].setLatLng(location);
+		}
+	}
+	//console.log(location);
+}
+
+eventMap.prototype.pruneMarkers = function(athletes, athID) {
+	for (bib in this.othMarkers) {
+		if (athletes.hasOwnProperty(bib) == false || bib == athID) {
+			this.map.removeLayer(this.othMarkers[bib]);
+			delete this.othMarkers[bib];
+		}
+	}
+}
+
+eventMap.prototype.setDistance = function(metrics) {
 		this.runCallbacks("distanceChanged", metrics);
-		this.map.panTo(athletePos);
 
-
+		var location = this.calculateLocation(metrics);
+		if (location) {
+			this.markerAthlete.setLatLng(location);
+			this.map.panTo(location);
+		}
 };
 
 eventMap.prototype._subDistance = function(points, distance, type) {
@@ -168,56 +229,7 @@ eventMap.prototype._findNextDistance = function(distance, type) {
 	return [lastPoint, lastPoint];
 };
 
-
-
-
-
-
-
-
-
-
-
-var e = new eventMap();
-//e.setDistance();
-
-var j = 0;
-var pace = 10; //km/hr
-
-//var athID = 386;
-var ath = window.location.hash.substr(1);
-if (Number(ath) > 0) {
-	athID = ath;
-} else {
-	athID = 0;
-}
-
-d = new dataLoader();
-d.getData(athID);
-
-var athletes = new athleteList();
-
-$('#btn_addAthlete').click(function(){
-  athletes.submit();
-});
-
-$("#form_addAthlete").submit(function(){
-  athletes.submit();
-  return false;
-});
-
-athletes.updateDom();
-
-
-
-e.onDistanceChanged(function updateDistance(metrics) {
-	$('#distanceCovered').html(Math.round(metrics.distance/100)/10 + " km");
-	$('#legFinish').html(metrics.legFinish);
-	$('#legFinishTime').html(metrics.legFinishTime);
-	$('#distanceRemaining').html(Math.round(metrics.distanceRemaining/100)/10 + " km");
-	$('#athleteName').html(metrics.name);
-	$('#athletePace').html(metrics.avgSpeed.toFixed(1) + " km/h");
-
+eventMap.prototype.updateSplits = function(metrics) {
 
 	// ---- update splits ---- //
 	var t = 0;
@@ -267,14 +279,90 @@ e.onDistanceChanged(function updateDistance(metrics) {
 	}
 
 //	console.log(metrics);
+};
+
+
+function setAthlete(athID) {
+	console.log(athID);
+	d.setAthlete(athID);
+	athletes.updateDom();
+}
+
+
+
+
+
+
+
+
+var e = new eventMap();
+d = new dataLoader();
+var athletes = new athleteList();
+//e.setDistance();
+
+var j = 0;
+var pace = 10; //km/hr
+
+//determin current athlete id;
+var ath = window.location.hash.substr(1);
+if (Number(ath) > 0) {
+	athID = ath;
+} else {
+	athID = 0;
+}
+
+//setup athlete
+$(document).ready(function(){
+	setAthlete(athID);
+	setTimeout(updateAll,5000);
+})
+
+
+
+
+$('#btn_addAthlete').click(function(){
+  athletes.submit();
 });
+
+$("#form_addAthlete").submit(function(){
+  athletes.submit();
+  return false;
+});
+
+$("#addAthleteModal").on("shown.bs.modal",function(){
+	console.log("show modal");
+	$("#form_addAthlete")[0].reset();
+});
+
+
+
+e.onDistanceChanged(function updateDistance(metrics) {
+	if (metrics.hasOwnProperty("avgSpeed")) {
+		$('#distanceCovered').html(Math.round(metrics.distance/100)/10 + " km");
+		$('#legFinish').html(metrics.legFinish);
+		$('#legFinishTime').html(metrics.legFinishTime);
+		$('#distanceRemaining').html(Math.round(metrics.distanceRemaining/100)/10 + " km");
+		$('#athleteName').html(metrics.name);
+		$('#athletePace').html(metrics.avgSpeed.toFixed(1) + " km/h");
+	}
+});
+
+
 
 function update(){
 
-	var metrics = d.estimatedDistance();
-	//console.log(metrics);
-	//console.log(distance);
+	var metrics = d.estimatedDistance(athID);
 	e.setDistance(metrics);
+
+	e.pruneMarkers(athletes.athletes, athID);
+
+	for (bib in athletes.athletes) {
+		if (bib != athID) {
+			var mets2 = d.estimatedDistance(bib);
+			e.updateOtherMarkers(mets2);
+		}
+	}
+
 	setTimeout(update,1000);
 	//console.log(i);
 	j = j + 10;
@@ -282,7 +370,7 @@ function update(){
 
 e.onReady(function(){update();});
 
-d.onData(function () {
+d.onDataChanged(function() {
 	var data = this;
 
 	//clear splits
@@ -290,14 +378,70 @@ d.onData(function () {
 	$("#tbl_bike tbody").html("");
 	$("#tbl_run tbody").html("");
 
+	e.updateSplits(data);
+});
+
+d.onData(function () {
+	var data = this;
+
 	//pass data to athletes
 	athletes.updateAthlete(data);
 });
 
+//update selected athlete every 100 seconds
+setInterval(function updateData() {
+	d.getData(athID);
+},100000); // 100 seconds
 
-setInterval(function(){d.getData(athID)},100000);
+//update all athletes every 10 minutes
+function updateAll() {
+	for (bib in athletes.athletes) {
+		d.getData(bib)
+	}
+}
+setInterval(updateAll,1000 * 60 * 10); // 10 minutes
+
+
 
 $(window).on('hashchange', function() {
   athID = window.location.hash.substr(1);
-  d.getData(athID);
+	setAthlete(athID);
 });
+
+
+
+
+
+
+//worker and banner
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  // beforeinstallprompt Event fired
+
+  // e.userChoice will return a Promise.
+  // For more details read: http://www.html5rocks.com/en/tutorials/es6/promises/
+  e.userChoice.then(function(choiceResult) {
+
+    console.log(choiceResult.outcome);
+
+    if(choiceResult.outcome == 'dismissed') {
+      console.log('User cancelled home screen install');
+    }
+    else {
+      console.log('User added to home screen');
+    }
+  });
+});
+
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(function(registration) {
+    // Registration was successful
+    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+  }).catch(function(err) {
+    // registration failed :(
+    console.log('ServiceWorker registration failed: ', err);
+  });
+}
+
+console.log("workers started");
