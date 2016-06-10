@@ -149,7 +149,8 @@ athleteList.prototype.updateAthlete = function(data) {
 
 athleteList.prototype.submit = function(event) {
   var bib = $('#add-bibNumber').val()
-  var startTime = $("add-startTime").val();
+  var startTime = $("#add-startTime").val();
+  console.log(startTime);
   this.add(bib,startTime);
 
   $("#addAthleteModal").modal('hide');

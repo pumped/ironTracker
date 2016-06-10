@@ -36,10 +36,7 @@ function eventMap() {
 		getRun(function() {
 			that.setupMarkers();
 			that.runCallbacks("ready");
-			that.map.locate({
-				timeout: 10000,
-				enableHighAccuracy: true
-			});
+
 		});
 	});
 
@@ -503,7 +500,9 @@ function updateAll() {
 		d.getData(bib)
 	}
 
+	//update users location
 	e.map.locate({
+		setView: false,
 		timeout: 10000,
 		enableHighAccuracy: true
 	});

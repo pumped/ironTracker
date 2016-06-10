@@ -43,7 +43,7 @@ dataLoader.prototype.setAthlete = function(athlete) {
 
 dataLoader.prototype.getData = function(athlete) {
 	that = this;
-	$.getJSON("data/"+athlete+".json", function(data) {
+	$.getJSON("/getData?ath="+athlete, function(data) {
 		//console.log(data);
 
 		that.athleteData = data;
