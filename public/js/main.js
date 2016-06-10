@@ -74,8 +74,8 @@ function eventMap() {
 
 	this.map.on('locationfound', function(e) {
 		var radius = e.accuracy / 2;
-		console.log(radius);
-		console.log(e)
+		/*console.log(radius);
+		console.log(e)*/
 
 		L.marker(e.latlng, {"icon":that.locationIcon}).addTo(that.map);
 		//L.circle(e.latlng, radius).addTo(that.map);

@@ -80,8 +80,12 @@ dataLoader.prototype.estimatedDistance = function(bib) {
 		return 0;
 	}
 
+
+	//get start time
+	var startTime = this.getRaceStart(this.dataSets[bib].startTime);
+
 	var legStartDistance = parseInt(latest[1].name.split(" ")[0]);
-	var splitTime = this._calculateRaceTimeOffset(latest[1].race_time);
+	var splitTime = this._calculateRaceTimeOffset(latest[1].race_time, startTime);
 	var hours = splitTime / 60 / 60;
 
 	//workout distance
@@ -91,8 +95,7 @@ dataLoader.prototype.estimatedDistance = function(bib) {
 	//console.log(avgSpeed);
 	//console.log("Distance: " + distance);
 
-
-	var metrics = this.calculateMetrics(bib, distance, avgSpeed, legStartDistance);
+	var metrics = this.calculateMetrics(bib, distance, avgSpeed, legStartDistance, startTime);
 	metrics.distance = distance;
 	metrics.avgSpeed = avgSpeed;
 	metrics.leg = latest[0];
@@ -102,7 +105,7 @@ dataLoader.prototype.estimatedDistance = function(bib) {
 
 }
 
-dataLoader.prototype.calculateMetrics = function(bib, distance, avgSpeed, legStartDistance) {
+dataLoader.prototype.calculateMetrics = function(bib, distance, avgSpeed, legStartDistance, startTime) {
 	//distance remaining
 	var latest = this.latestCheckpoint(bib);
 	//console.log(latest);
@@ -117,11 +120,9 @@ dataLoader.prototype.calculateMetrics = function(bib, distance, avgSpeed, legSta
 	var splitTime = this._convertTimeToSeconds(latest[1].race_time);
 	var legFinish = splitTime + splitTimeRemaining;
 
-
-
 	//est leg finish
 	var timeRemaining = (((distanceRemaining/1000) / avgSpeed*60*60));
-	var legFinishSeconds = this.getCurrentRaceTime() + timeRemaining;
+	var legFinishSeconds = this.getCurrentRaceTime(startTime) + timeRemaining;
 	var legFinishTime = new Date(this.raceStart);
 	legFinishTime.setSeconds(legFinishSeconds);
 	var legFinishString = this._createTimeString(legFinishTime);
@@ -158,7 +159,18 @@ dataLoader.prototype._createTimeString = function(time) {
 	return hours + ":" + mins + " " +ap;
 }
 
-dataLoader.prototype.getCurrentRaceTime = function() {
+dataLoader.prototype.getRaceStart = function(startTime) {
+	//console.log(startTime);
+	var time = startTime.split(":");
+	var raceStart = new Date(this.raceStart);
+	raceStart.setMinutes(time[1]);
+	raceStart.setHours(time[0]);
+
+	//console.log(raceStart);
+	return raceStart
+}
+
+dataLoader.prototype.getCurrentRaceTime = function(startTime) {
 
 	//SET THIS TO CURRENT DATE
 	var currentDate = new Date(2015,05,14,20,53,00);//new Date();
@@ -170,7 +182,7 @@ dataLoader.prototype.getCurrentRaceTime = function() {
 
 	//console.log(this.raceStart);
 
-	var raceTime = (currentDate - this.raceStart) / 1000;
+	var raceTime = (currentDate - startTime) / 1000;
 
 	//console.log("Race Time: " + raceTime / 60 / 60);
 
@@ -195,9 +207,9 @@ dataLoader.prototype._convertSecondsToTime = function(time) {
 	return hours + ":" + minutes  + ":" + seconds;
 }
 
-dataLoader.prototype._calculateRaceTimeOffset = function(time) {
+dataLoader.prototype._calculateRaceTimeOffset = function(time, startTime) {
 	var dTime = this._convertTimeToSeconds(time);
-	return this.getCurrentRaceTime() - dTime;
+	return this.getCurrentRaceTime(startTime) - dTime;
 }
 
 dataLoader.prototype._paceToSpeed = function(pace) {
