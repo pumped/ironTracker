@@ -7,28 +7,30 @@ var scraper = require('./scraper');
 
 var privateKey = fs.readFileSync( 'ssl/server.key' );
 var certificate = fs.readFileSync( 'ssl/wheresmyathlete_com.crt' );
+var caBundle = fs.readFileSync('ssl/wheresmyathlete_com.ca-bundle', 'utf8');
 
 https.createServer({
     key: privateKey,
-    cert: certificate
-}, app).listen(9871);
+    cert: certificate,
+    ca: caBundle
+}, app).listen(443);
 
 app.use(express.static('public'));
 
 app.get('/getData', function (req, res) {
   console.log(req.query.id);
-  res.send('{"bib":386,"times":["1:30:19","2:12:54","3:03:39","4:32:12"],"splits":{"swim":[],"bike":[{"name":"18 km","distance":"18 km ","split_time":"35:06","race_time":"2:12:54","speed":"30.77 km/h"},{"name":"43.6 km","distance":"25.6 km ","split_time":"50:45","race_time":"3:03:39","speed":"30.27 km/h"},{"name":"69.2 km","distance":"25.6 km ","split_time":"1:28:33","race_time":"4:32:12","speed":"17.35 km/h"}],"run":[]},"name":"Glen HARKER","swim":"1:30:19","bike":["2:12:54","3:03:39","4:32:12","--:--","--:--","--:--"],"run":["--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--"]}');
+  res.send(JSON.stringify(req.query));
+  //res.send('{"bib":386,"times":["1:30:19","2:12:54","3:03:39","4:32:12"],"splits":{"swim":[],"bike":[{"name":"18 km","distance":"18 km ","split_time":"35:06","race_time":"2:12:54","speed":"30.77 km/h"},{"name":"43.6 km","distance":"25.6 km ","split_time":"50:45","race_time":"3:03:39","speed":"30.27 km/h"},{"name":"69.2 km","distance":"25.6 km ","split_time":"1:28:33","race_time":"4:32:12","speed":"17.35 km/h"}],"run":[]},"name":"Glen HARKER","swim":"1:30:19","bike":["2:12:54","3:03:39","4:32:12","--:--","--:--","--:--"],"run":["--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--","--:--"]}');
 });
 
-/*
-var server = app.listen(9871, function () {
+//redirect server
+var http = require('http');
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(80);
 
-  var host = server.address().address;
-  var port = server.address().port;
 
-  console.log('Example app listening at http://%s:%s', host, port);
-
-});*/
 
 //run scraper
 
@@ -36,12 +38,12 @@ s = new scraper();
 
 function autoScrape() {
 	try {
-		s.scrape(658);
+		/*s.scrape(658);
     s.scrape(819);
     s.scrape(901);
     s.scrape(554);
     s.scrape(857);
-    s.scrape(812);
+    s.scrape(812);*/
 	}
 	catch (e) {
 

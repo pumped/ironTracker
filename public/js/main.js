@@ -12,6 +12,8 @@ function eventMap() {
 
 	this.userCourseLocations = {"bike":[],"run":[]};
 
+	this.followAthlete = true;
+
 	//add base layer
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicHVtcGVkIiwiYSI6Ik5VTjlka2MifQ.0k-6s3mWkXrSYDcQrrLGDg', {
 	    attribution: '',
@@ -32,11 +34,45 @@ function eventMap() {
 	$.getJSON("data/cycle.json", function(data) {
 		that.processGeoJSON("bike",data);
 		getRun(function() {
-			that.setupAthleteMarker();
+			that.setupMarkers();
 			that.runCallbacks("ready");
-			that.map.locate();
+			that.map.locate({
+				timeout: 10000,
+				enableHighAccuracy: true
+			});
 		});
 	});
+
+	var locateButton = L.easyButton({
+    states: [{
+            stateName: 'enabled',   // name the state
+            icon:      'glyphicon glyphicon-map-marker',          // and define its properties
+            title:     'stop following athlete', // like its title
+            onClick: function(btn, map) {  // and its callback
+								that.followAthlete = false;
+                btn.state('disabled'); // change state on click!
+            }
+        }, {
+            stateName: 'disabled',
+            icon:      'glyphicon glyphicon-map-marker',
+            title:     'follow athlete',
+            onClick: function(btn, map) {
+							that.followAthlete = true;
+							btn.state('enabled');
+            }
+    }]
+	});
+
+	locateButton.addTo(this.map);
+
+	L.easyButton('glyphicon glyphicon-record', function(){
+		that.map.locate({
+			setView: true,
+			timeout: 10000,
+			enableHighAccuracy: true,
+			maxZoom: 16
+		});
+	}).addTo(this.map);
 
 
 	this.map.on('locationfound', function(e) {
@@ -44,8 +80,8 @@ function eventMap() {
 		console.log(radius);
 		console.log(e)
 
-		L.marker(e.latlng).addTo(that.map);
-		L.circle(e.latlng, 50).addTo(that.map);
+		L.marker(e.latlng, {"icon":that.locationIcon}).addTo(that.map);
+		//L.circle(e.latlng, radius).addTo(that.map);
 		//that.map.panTo(e.latlng)
 
 		that.findNearestPoints(e.latlng);
@@ -55,13 +91,13 @@ function eventMap() {
 
 
 eventMap.prototype.findNearestPoints = function(location) {
-	var searchDistance = 50;
+	var searchDistance = 100;
 	//var type = "run";
 	//for each point in geoJson
 	for (var type in this.userCourseLocations) {
 		var coordinates = this.eventGeoJson[type].features[0].geometry.coordinates;
 
-		console.log("locations");
+		//console.log("locations");
 		for (var i in coordinates) {
 			var coords = Array.prototype.slice.call(coordinates[i]).reverse();
 			var line = L.polyline([coords, location]);
@@ -78,7 +114,7 @@ eventMap.prototype.findNearestPoints = function(location) {
 }
 
 eventMap.prototype.calculateTimeToHere = function(metrics) {
-	console.log();
+	//console.log();
 	var fuzz = 1000; //m
 
 	var leg = metrics.leg;
@@ -92,7 +128,7 @@ eventMap.prototype.calculateTimeToHere = function(metrics) {
 			closest = location;
 		}
 	}
-	console.log(closest);
+	//console.log(closest);
 
 	var distance = closest - metrics.distance;
 	var time = (distance/1000) / avgSpeed * 60 * 60;
@@ -162,7 +198,7 @@ eventMap.prototype.processGeoJSON = function(type, geoJson) {
 	//console.log(Math.round(this.distanceHash[this.distanceHash.length-1]/1000) + "km")
 };
 
-eventMap.prototype.setupAthleteMarker = function() {
+eventMap.prototype.setupMarkers = function() {
 	var AthIcon = L.Icon.extend({
     options: {
 			iconUrl: 'img/marker-icon-2x.png',
@@ -179,8 +215,17 @@ eventMap.prototype.setupAthleteMarker = function() {
     }
 	});
 
+	var LocationIcon = L.Icon.extend({
+    options: {
+			iconUrl: 'img/location.png',
+      iconSize:     [15, 15],
+			iconAnchor:   [7.5, 7.5]
+    }
+	});
+
 	var athIcon = new AthIcon();
 	this.othIcon = new OthIcon();
+	this.locationIcon = new LocationIcon();
 	this.markerAthlete = L.marker([-16.92142702639103, 145.7787742651999], {icon: athIcon}).addTo(this.map);
 	//this.othMarkers[0] = L.marker([-16.92142702639103, 145.7787742651999], {icon: othIcon}).addTo(this.map);
 };
@@ -248,7 +293,9 @@ eventMap.prototype.setDistance = function(metrics) {
 			var location = this.calculateLocation(metrics);
 			if (location) {
 				this.markerAthlete.setLatLng(location);
-				//this.map.panTo(location);
+				if (this.followAthlete) {
+					this.map.panTo(location);
+				}
 			}
 
 	}
@@ -455,6 +502,11 @@ function updateAll() {
 	for (bib in athletes.athletes) {
 		d.getData(bib)
 	}
+
+	e.map.locate({
+		timeout: 10000,
+		enableHighAccuracy: true
+	});
 }
 setInterval(updateAll,1000 * 60 * 10); // 10 minutes
 

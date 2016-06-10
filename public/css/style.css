@@ -74,3 +74,16 @@ html, body{
 #AddMenu {
   margin-bottom: 80px;
 }
+
+button.easy-button-button {
+  background-color: #fff;
+  border: 0;
+  border-radius: 4px;
+  margin: 0;
+  padding: 6px 8px;
+  line-height: 1;
+}
+
+button.enabled-active {
+    color: #5e9cff;
+}
