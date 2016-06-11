@@ -117,7 +117,7 @@ function formatTime(time) {
 //
 // autoScrape();
 
-athletes.scrapeData(732, "", true);
+//athletes.scrapeData(732, "", true);
 
 setInterval(function() {
   athletes.scrapeAll();
