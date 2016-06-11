@@ -22,7 +22,10 @@
 
 
   $("#sidebar").on("click", ".menuGroup a.list-group-item",function selectMenuItem(){
-    hideSidebar();
+    if ($(window).width() < 768) {
+      console.log($(window).width());
+      hideSidebar();
+    }
     //sidebarActive();
   });
 

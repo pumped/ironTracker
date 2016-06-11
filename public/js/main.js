@@ -34,7 +34,6 @@ function eventMap() {
 	$.getJSON("data/cycle.json", function(data) {
 		that.processGeoJSON("bike",data);
 		getRun(function() {
-			that.setupMarkers();
 			that.runCallbacks("ready");
 
 		});
@@ -71,13 +70,15 @@ function eventMap() {
 		});
 	}).addTo(this.map);
 
+	this.setupMarkers();
+	var userLocation = L.marker([1,1], {"icon":that.locationIcon}).addTo(that.map);
 
 	this.map.on('locationfound', function(e) {
 		var radius = e.accuracy / 2;
 		/*console.log(radius);
 		console.log(e)*/
 
-		L.marker(e.latlng, {"icon":that.locationIcon}).addTo(that.map);
+		userLocation.setLatLng(e.latlng);
 		//L.circle(e.latlng, radius).addTo(that.map);
 		//that.map.panTo(e.latlng)
 
