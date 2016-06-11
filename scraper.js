@@ -111,7 +111,9 @@ scraper.prototype.processAthlete = function($, athlete) {
 		athlete.bike = new Array();
 		for(var row = 0; row < htmlbike.length; row++){
 			var new_value = htmlbike.eq(row).children('td').eq(3).html();
-			athlete.bike.push(new_value);
+			if (!new_value.startsWith("--")){
+				athlete.bike.push(new_value);
+			}
 			if(verbose) console.log('bike ('+row+'): ' + new_value);
 
 			//if split has data
@@ -139,7 +141,9 @@ scraper.prototype.processAthlete = function($, athlete) {
 		athlete.run = new Array();
 		for(var row = 0; row < htmlrun.length; row++){
 			var new_value = htmlrun.eq(row).children('td').eq(3).html();
-			athlete.run.push(new_value);
+			if (!new_value.startsWith("--")){
+				athlete.run.push(new_value);
+			}
 			if(verbose) console.log('run ('+row+'): ' + new_value);
 
 			if(new_value.charAt(0) != '-'){

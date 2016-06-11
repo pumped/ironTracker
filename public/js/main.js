@@ -224,7 +224,8 @@ eventMap.prototype.setupMarkers = function() {
 	var athIcon = new AthIcon();
 	this.othIcon = new OthIcon();
 	this.locationIcon = new LocationIcon();
-	this.markerAthlete = L.marker([-16.92142702639103, 145.7787742651999], {icon: athIcon}).addTo(this.map);
+	//[145.6710231397301,-16.745406975969672]
+	this.markerAthlete = L.marker([-16.745406975969672, 145.744567193090916], {icon: athIcon}).addTo(this.map);
 	//this.othMarkers[0] = L.marker([-16.92142702639103, 145.7787742651999], {icon: othIcon}).addTo(this.map);
 };
 
@@ -301,11 +302,12 @@ eventMap.prototype.setDistance = function(metrics) {
 
 eventMap.prototype._subDistance = function(points, distance, type) {
 	var coordinates = this.eventGeoJson[type].features[0].geometry.coordinates;
+	console.log(type);
 	var sd = this.distanceHash[type][points[0]];
 	var nd = this.distanceHash[type][points[1]];
 	var segDistance = nd - sd;
 
-	if (segDistance == 0) {
+	if (segDistance <= 0) {
 		var lat = coordinates[points[0]][1];
 		var lon = coordinates[points[0]][0]
 	} else {
@@ -315,6 +317,7 @@ eventMap.prototype._subDistance = function(points, distance, type) {
 		var lat = (((distance - sd) * latRange) / segDistance) + coordinates[points[0]][1];
 		var lon = (((distance - sd) * lonRange) / segDistance) + coordinates[points[0]][0];
 	}
+
 
 	return [lat,lon];
 }
@@ -454,14 +457,18 @@ e.onDistanceChanged(function updateDistance(metrics) {
 function update(){
 
 	var metrics = d.estimatedDistance(athID);
-	e.setDistance(metrics);
+	if (metrics) {
+		e.setDistance(metrics);
+	}
 
 	e.pruneMarkers(athletes.athletes, athID);
 
 	for (bib in athletes.athletes) {
 		if (bib != athID) {
 			var mets2 = d.estimatedDistance(bib);
-			e.updateOtherMarkers(mets2);
+			if (mets2) {
+				e.updateOtherMarkers(mets2);
+			}
 		}
 	}
 

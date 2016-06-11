@@ -4,7 +4,7 @@ function dataLoader() {
 	this.dataSets = {};
 	this.currentRaceTime = 21486;
 	//this.raceStart = new Date(2015,04,14,08,15,00);
-	this.raceStart = new Date(2015,05,14,7,53,00);
+	this.raceStart = new Date(2016,05,12,7,53,00);
 
 	this.legDistance = {"swim": 3.8, "bike": 180, "run": 42};
 }
@@ -62,6 +62,9 @@ dataLoader.prototype.estimatedDistance = function(bib) {
 
 	//estimate speed
 	var latest = this.latestCheckpoint(bib);
+	console.log(latest)
+
+	if (!latest) {return false;}
 
 
 
@@ -173,12 +176,14 @@ dataLoader.prototype.getRaceStart = function(startTime) {
 dataLoader.prototype.getCurrentRaceTime = function(startTime) {
 
 	//SET THIS TO CURRENT DATE
-	var currentDate = new Date(2015,05,14,20,53,00);//new Date();
+	//var currentDate = new Date(2015,05,14,20,53,00);
+	var currentDate = new Date();
+	//currentDate.setHours(18);
 
 	//DELETE this
-	var thisDate = new Date();
-	currentDate.setSeconds(thisDate.getSeconds());
-	currentDate.setMinutes(thisDate.getMinutes());
+	// var thisDate = new Date();
+	// currentDate.setSeconds(thisDate.getSeconds());
+	// currentDate.setMinutes(thisDate.getMinutes());
 
 	//console.log(this.raceStart);
 
@@ -222,6 +227,8 @@ dataLoader.prototype._paceToSpeed = function(pace) {
 dataLoader.prototype.latestCheckpoint = function(bib) {
 	// determine latest checkpoint from data
 	var athleteData = this.dataSets[bib];
+
+	console.log(athleteData);
 
 	//check run length
 	if (athleteData.splits.run.length) {
