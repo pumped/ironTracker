@@ -73,7 +73,7 @@ AthManager.prototype.scrapeData = function(bib, priority, callback) {
 
 AthManager.prototype.scrapeAll = function() {
   for (var bib in this.startTimes) {
-    this.scrapeData(bib, false);
+    this.scrapeData(bib, false, function(){});
   }
 }
 
